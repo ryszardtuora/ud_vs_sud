@@ -1,0 +1,2 @@
+Python 3 Dependencies:
+-wget v.3.2
