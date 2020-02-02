@@ -1,4 +1,32 @@
 class Sentence:
+  @staticmethod
+  def load_trees(filename):
+    # loads trees from .conllu formatted file
+    data_file=open(filename, "r", encoding="utf-8")
+    trees=[]
+    for tree in con.parse_tree_incr(data_file):
+      trees.append(tree)
+    data_file.close()
+    return trees
+
+  @staticmethod
+  def load_tokenlists(filename):
+    # loads tokenlists from .conllu formatted file
+    data_file = open(filename, "r", encoding="utf-8")
+    tklists = []
+    for tk in con.parse_incr(data_file):
+      tklists.append(tree)
+    data_file.close()
+    return tklists
+
+  @staticmethod
+  def load_sentences(filename):
+    trees = load_trees(filename)
+    tokenlists = load_tokenlists(filename)
+    sentence_list = [Sentence(tl,tr) for (tl,tr) in zip(tokenlists, trees)]
+    return sentence_list 
+
+
   def __init__(self, token_list, tree):
     # these should be created using token_list and tree objects from the conllu module
     self.token_list = token_list
@@ -13,10 +41,10 @@ class Sentence:
 
   def get_subtree(self, token, tree = None):
     # returns the subtree spanned by the given token
-    if tree = None:
+    if tree == None:
       tree = self.tree
     if tree.token == token:
-      return self.tree:
+      return self.tree
     else:
       subtrees = [self.get_subtree(token, stree) for stree in tree.children]
       for stree in subtrees:
@@ -50,8 +78,8 @@ class Sentence:
   def avg_dep_length(self):
     # returns the average dependency length, excluding the arc from root to dummy token 0
     # the root token is counted when calculating the average though
-    non_roots = [t for t in self.get_tokens() if t["deprel"] != "root"
-    dep_lengths = [abs(t["id"] - self.get_token(t["head"])["id"]) for t in non_roots]
+    non_roots = [t for t in self.get_tokens() if t["deprel"] != "root"]
+    dep_lengths = [abs(t["id"] - self[t["head"]]["id"]) for t in non_roots]
     return sum(dep_lengths) / len(self)
 
   def avg_token_depth(self):
@@ -64,7 +92,7 @@ class Sentence:
       depth = 0
       curr_t = t
       while deprel!='root':
-        curr_t = self.get_token(curr_t['head'])
+        curr_t = self[curr_t['head']]
         deprel = curr_t['deprel']
         depth += 1
       depths.append(depth)
@@ -78,18 +106,6 @@ class Sentence:
 
   #def no_of_coord_structures(self):
   #  return len(self.get_coord_subtrees())
-
-    
-    
-    #def errors(self, gold_standard):
-    #    # zwraca parę (uas_errors, las_errors, %uas, %las)
-        # ilości złych strzałek, i złych etykiet w zdaniu względem gold_standard
-    #    uas_errors=0
-    #    las_errors=0
-    #    for (t, gt) in zip(self.token_list, gold_standard.token_list):
-    #        uas_errors+=1-UAS(gt,t)
-    #        las_errors+=1-LAS(gt,t)
-    #    return (uas_errors, las_errors, 1-uas_errors/self.get_len(), 1-las_errors/self.get_len())
 
   # Token features
 
@@ -112,3 +128,44 @@ class Sentence:
     #def hd_of_coord_phrase(self, token):
      #   sts = [st.token for st in self.get_coord_subtrees()]
      #   return token in sts
+
+  def are_trans_connected(self, head, subordinate):
+    # Verifies whether the subordinate is indeed transitively attached to head
+    if head == subordinate:
+      return True
+    else:
+      head_id = subordinate["head"]
+      if head_id == 0:
+        return False
+      else:
+        return(self.are_trans_connected(head, self[head_id]))
+
+  def count_nonprojective(self, tree = None):
+    # Calculates the number of nonprojective arcs
+    if tree is None:	
+      # the parameter tree is used in recursive calls
+      tree = self.tree
+    if tree.children == []:
+      # leaves have no nonprojective edges
+      return 0
+    else:
+      head_tok = tree.token
+      head_id = head_tok["id"]
+      nonprojs = 0
+      for c in tree.children:
+        # for each arc starting from the present node, we verify whether it is projective
+
+        # Obtaining the indices of all tokens between the head and the subordinate token                
+        c_id = c.token["id"]
+        span = sorted([c_id, head_id])
+        min_id = span[0] + 1 # no need to see whether either the head, or the subordinate token are subordinated
+        max_id = span[1]
+  
+        # verifying whether all of these tokens are transitively subordinate to the head token
+        trans_connected = [self.are_trans_connected(head_tok, self[between_id]) for between_id in range(min_id, max_id)]
+        nonproj_edge = False in trans_connected
+        nonprojs += int(nonproj_edge)
+      subtrees = [self.count_nonprojective(ch_tree) for ch_tree in tree.children]
+      # We recurrently calculate the nonprojective edges of children nodes and return the sum total 
+      return nonprojs + sum(subtrees)
+
