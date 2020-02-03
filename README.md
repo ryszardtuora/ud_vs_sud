@@ -12,3 +12,4 @@ Comparing the learnability of two approaches to headedness for dependency gramma
 
 ## Zadania:
 - dodać globalną opcję pomijania interpunkcji, która modyfikowałaby działanie wszystkich skryptów na to wrażliwych
+- pobrać embeddingi dla interesujących języków, facebook udostępnia wektory dla 157 języków: https://fasttext.cc/docs/en/crawl-vectors.html
