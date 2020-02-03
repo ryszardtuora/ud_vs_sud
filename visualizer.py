@@ -5,9 +5,9 @@ from spacy.tokens import Doc
 dummy_voc = Vocab()
 
 def display(sentence):
-	words = [t["form"] for t in sentence.get_tokens()]
+	words = [t["form"] for t in sentence]
 	doc = Doc(dummy_voc, words)
-	for t_id, token in enumerate(sentence.get_tokens()):
+	for t_id, token in enumerate(sentence):
 		doc[t_id].pos_ = token["upostag"]
 		doc[t_id].dep_ = token["deprel"]
 		hd = token["head"] - 1

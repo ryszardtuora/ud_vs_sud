@@ -27,7 +27,6 @@ class Sentence:
     sentence_list = [Sentence(tl,tr) for (tl,tr) in zip(tokenlists, trees)]
     return sentence_list 
 
-
   def __init__(self, token_list, tree):
     # these should be created using token_list and tree objects from the conllu module
     self.token_list = token_list
@@ -39,6 +38,11 @@ class Sentence:
 
     match = [t for t in self.token_list if t["id"] == index][0]
     return match
+
+  def __iter__(self):
+    # returns the list of all base tokens (i.e. including the subword tokens
+    # but excluding the tokens spanning over them, and created by merging these)
+    return iter([t for t in self.token_list if type(t["id"]) == int])
 
   def get_subtree(self, token, tree = None):
     # returns the subtree spanned by the given token
@@ -60,21 +64,16 @@ class Sentence:
     else:
       return [self.flatten_subtree(c) for c in subtree.children]
 
-  def get_tokens(self):
-    # returns the list of all base tokens (i.e. including the subword tokens
-    # but excluding the tokens spanning over them, and created by merging these)
-    return [t for t in self.token_list if type(t["id"]) == int]
-
   def get_non_puncts(self):
     # returns the list of tokens which are not punctuation
-    return [t for t in self.get_tokens() if t["upostag"] != "PUNCT"]
+    return [t for t in self if t["upostag"] != "PUNCT"]
   # Sentence parameters
                     
   def __len__(self):
     # returns the length of the sentence
     # this is done via the max id of the token
     # so that merged tokens are not counted
-    return max([t['id'] for t in self.get_tokens()])
+    return max([t['id'] for t in self])
 
   def no_arcs(self):
     # number of arcs is the number of tokens minus 1
@@ -82,7 +81,7 @@ class Sentence:
 
   def avg_dep_length(self):
     # returns the average dependency length, excluding the arc from root to dummy token 0
-    non_roots = [t for t in self.get_tokens() if t["deprel"] != "root"]
+    non_roots = [t for t in self if t["deprel"] != "root"]
     dep_lengths = [abs(t["id"] - self[t["head"]]["id"]) for t in non_roots]
     return sum(dep_lengths) / self.no_arcs()
 
@@ -91,7 +90,7 @@ class Sentence:
     # depth of root is equal to 0
     # the root token is counted when calculating the average though
     depths = []
-    for t in self.get_tokens():
+    for t in self:
       deprel = t['deprel']
       depth = 0
       curr_t = t
