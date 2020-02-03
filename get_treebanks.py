@@ -6,6 +6,8 @@ url_tb = "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-2
 url_docs = "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-2988/ud-documentation-v{}.tgz".format(UD_VERSION)
 url_tools = "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-2988/ud-tools-v{}.tgz".format(UD_VERSION)
 
+
+
 print("downloading the UD docs...")
 wget.download(url_docs)
 print("downloading the UD tools...")
@@ -23,6 +25,10 @@ print("extracting the UD corpora...")
 tf = tarfile.open("ud-treebanks-v{}.tgz".format(UD_VERSION))
 tf.extractall()
 
+sud_tb = "www.grew.fr/download/sud-treebanks-v2.4_2019_08_13.tgz"
 
-
-
+print("downloading the SUD corpora...")
+wget.download(sud_tb)
+print("extracting the SUD corpora...")
+tf = tarfile.open("sud-treebanks-v2.4_2019_08_13.tgz")
+tf.extractall()

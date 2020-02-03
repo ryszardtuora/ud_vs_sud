@@ -1,10 +1,11 @@
+from conllu import parse_tree_incr, parse_incr
 class Sentence:
   @staticmethod
   def load_trees(filename):
     # loads trees from .conllu formatted file
     data_file=open(filename, "r", encoding="utf-8")
     trees=[]
-    for tree in con.parse_tree_incr(data_file):
+    for tree in parse_tree_incr(data_file):
       trees.append(tree)
     data_file.close()
     return trees
@@ -14,15 +15,15 @@ class Sentence:
     # loads tokenlists from .conllu formatted file
     data_file = open(filename, "r", encoding="utf-8")
     tklists = []
-    for tk in con.parse_incr(data_file):
-      tklists.append(tree)
+    for tkl in parse_incr(data_file):
+      tklists.append(tkl)
     data_file.close()
     return tklists
 
-  @staticmethod
-  def load_sentences(filename):
-    trees = load_trees(filename)
-    tokenlists = load_tokenlists(filename)
+  @classmethod
+  def load_sentences(cls, filename):
+    trees = cls.load_trees(filename)
+    tokenlists = cls.load_tokenlists(filename)
     sentence_list = [Sentence(tl,tr) for (tl,tr) in zip(tokenlists, trees)]
     return sentence_list 
 
@@ -73,14 +74,17 @@ class Sentence:
     # returns the length of the sentence
     # this is done via the max id of the token
     # so that merged tokens are not counted
-    return max([t['id'] for t in self.get_full_tokens()])
+    return max([t['id'] for t in self.get_tokens()])
+
+  def no_arcs(self):
+    # number of arcs is the number of tokens minus 1
+    return len(self) - 1
 
   def avg_dep_length(self):
     # returns the average dependency length, excluding the arc from root to dummy token 0
-    # the root token is counted when calculating the average though
     non_roots = [t for t in self.get_tokens() if t["deprel"] != "root"]
     dep_lengths = [abs(t["id"] - self[t["head"]]["id"]) for t in non_roots]
-    return sum(dep_lengths) / len(self)
+    return sum(dep_lengths) / self.no_arcs()
 
   def avg_token_depth(self):
     # returns the average depth of the token in the dependency tree
