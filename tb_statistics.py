@@ -46,7 +46,7 @@ def nonprojective_arcs(uds, suds):
 			npas = u_sent.count_nonprojective()
 			np_arcs += npas
 			if npas > 0:
-                                np_trees += 1
+				np_trees += 1
 		ud_pct = np_arcs / arcs
 		ud_np_trees = np_trees / len(u_s)
 		
@@ -58,7 +58,7 @@ def nonprojective_arcs(uds, suds):
 			npas = s_sent.count_nonprojective()
 			np_arcs += npas
 			if npas > 0:
-                                np_trees += 1
+				np_trees += 1
 		sud_pct = np_arcs / arcs
 		sud_np_trees = np_trees / len(s_s)
 		
@@ -69,16 +69,16 @@ def nonprojective_arcs(uds, suds):
 		table["sud_trees"].append(sud_np_trees)
 	return table
 
-def label_entropy(uds, suds)
-        table = {"name" : [], "ud_label_entropy" : [], "sud_label_entropy" : []}
-        def count_label(dic, token):
-                deprel = token["deprel"]
-                if deprel != "root":
-                        try:
-                                dic[deprel] += 1
-                        except KeyError:
-                                dic[deprel] = 1
-                                
+def label_entropy(uds, suds):
+	table = {"name" : [], "ud_label_entropy" : [], "sud_label_entropy" : []}
+	def count_label(dic, token):
+		deprel = token["deprel"]
+		if deprel != "root":
+			try:
+				dic[deprel] += 1
+			except KeyError:
+				dic[deprel] = 1
+				
 	for u, s in zip(uds, suds):
 		name = os.path.basename(os.path.dirname(u))[3:]
 		print(name)
@@ -88,17 +88,17 @@ def label_entropy(uds, suds)
 
 		u_labels = {}
 		for u_sent in u_s:
-                        for tok in u_sent:
-                                count_label(u_labels, tok)
-                
+			for tok in u_sent:
+				count_label(u_labels, tok)
+		
 		u_entropy = entropy(list(u_labels.values()))
 
 		s_labels = {}
 		for s_sent in s_s:
 			for tok in s_sent:
-                                count_label(s_labels, tok)
+				count_label(s_labels, tok)
 
-                s_entropy = entropy(list(s_labels.values()))
+		s_entropy = entropy(list(s_labels.values()))
 		
 		table["name"].append(name)
 		table["ud_label_entropy"].append(u_entropy)
@@ -107,7 +107,7 @@ def label_entropy(uds, suds)
 
 tb = nonprojective_arcs(uds, suds)
 df = DataFrame(tb)
-df.to_csv("nprj_arcs.csv")
+df.to_csv("nonprojectivity.csv")
 
 tb = label_entropy(uds, suds)
 df = DataFrame(tb)
