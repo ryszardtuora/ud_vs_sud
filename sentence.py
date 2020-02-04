@@ -1,4 +1,5 @@
 from conllu import parse_tree_incr, parse_incr
+
 class Sentence:
   @staticmethod
   def load_trees(filename):

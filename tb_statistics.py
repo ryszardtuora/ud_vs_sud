@@ -1,6 +1,7 @@
 import os
 from sentence import Sentence
 from pandas import DataFrame
+from scipy.stats import entropy
 
 UD_TB_DIR = "ud-treebanks-v2.4"
 SUD_TB_DIR = "sud-treebanks-v2.4_2019_08_13"
@@ -30,7 +31,7 @@ def tbs_match(a,b):
 assert all([tbs_match(s,u) for s,u in zip(suds,uds)]) # verifying whether the corpora are matched properly
 
 def nonprojective_arcs(uds, suds):
-	table = {"name" : [], "ud_arcs" : [], "sud_arcs" : []}
+	table = {"name" : [], "ud_arcs" : [], "sud_arcs" : [], "ud_trees" : [], "sud_trees" : []}
 	for u, s in zip(uds, suds):
 		name = os.path.basename(os.path.dirname(u))[3:]
 		print(name)
@@ -39,24 +40,75 @@ def nonprojective_arcs(uds, suds):
 		s_s = Sentence.load_sentences(s)
 		arcs = 0
 		np_arcs = 0
+		np_trees = 0
 		for u_sent in u_s:
 			arcs += u_sent.no_arcs()
-			np_arcs += u_sent.count_nonprojective()
+			npas = u_sent.count_nonprojective()
+			np_arcs += npas
+			if npas > 0:
+                                np_trees += 1
 		ud_pct = np_arcs / arcs
+		ud_np_trees = np_trees / len(u_s)
 		
 		arcs = 0
 		np_arcs = 0
+		np_trees = 0
 		for s_sent in s_s:
 			arcs += s_sent.no_arcs()
-			np_arcs += s_sent.count_nonprojective()
+			npas = s_sent.count_nonprojective()
+			np_arcs += npas
+			if npas > 0:
+                                np_trees += 1
 		sud_pct = np_arcs / arcs
-		
+		sud_np_trees = np_trees / len(s_s)
 		
 		table["name"].append(name)
 		table["ud_arcs"].append(ud_pct)
 		table["sud_arcs"].append(sud_pct)
+		table["ud_trees"].append(ud_np_trees)
+		table["sud_trees"].append(sud_np_trees)
+	return table
+
+def label_entropy(uds, suds)
+        table = {"name" : [], "ud_label_entropy" : [], "sud_label_entropy" : []}
+        def count_label(dic, token):
+                deprel = token["deprel"]
+                if deprel != "root":
+                        try:
+                                dic[deprel] += 1
+                        except KeyError:
+                                dic[deprel] = 1
+                                
+	for u, s in zip(uds, suds):
+		name = os.path.basename(os.path.dirname(u))[3:]
+		print(name)
+
+		u_s = Sentence.load_sentences(u)
+		s_s = Sentence.load_sentences(s)
+
+		u_labels = {}
+		for u_sent in u_s:
+                        for tok in u_sent:
+                                count_label(u_labels, tok)
+                
+		u_entropy = entropy(list(u_labels.values()))
+
+		s_labels = {}
+		for s_sent in s_s:
+			for tok in s_sent:
+                                count_label(s_labels, tok)
+
+                s_entropy = entropy(list(s_labels.values()))
+		
+		table["name"].append(name)
+		table["ud_label_entropy"].append(u_entropy)
+		table["sud_label_entropy"].append(s_entropy)
 	return table
 
 tb = nonprojective_arcs(uds, suds)
 df = DataFrame(tb)
 df.to_csv("nprj_arcs.csv")
+
+tb = label_entropy(uds, suds)
+df = DataFrame(tb)
+df.to_csv("label_entropy.csv")
