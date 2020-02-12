@@ -3,3 +3,4 @@ Python 3 Dependencies:
 -conllu v.2.2.1
 -spaCy v.2.2
 -scipy v.1.2.1
+-fasttext v.0.9.1
