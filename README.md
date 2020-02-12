@@ -3,7 +3,7 @@ Comparing the learnability of two approaches to headedness for dependency gramma
 
 ## PLAN
 
-1. Pobrać dotychczasowe korpusy w wersji UD i SUD, 2.4 i policzyć statystyki nieprojektywności
+1. Pobrać dotychczasowe korpusy w wersji UD i SUD, 2.4 i policzyć statystyki nieprojektywności - DONE
 2. Na podstawie m.in. pkt 1., oraz konsultacji z prof. Przepiórkowskim (np. na temat wpływu automatycznego tagowania) i literaturą, wypracować metodę ewaluacji jakości korpusów, i dokonać selekcji korpusów.
 3. Przygotować listę parserów [Combo, spacy, HSE] (również pod wpływem uwag recenzentów), i podjąć zewnętrznych embeddingów 
 4. Zastanowić się nad ewentualną modyfikacją kodu konwertera UD->SUD
