@@ -45,25 +45,33 @@ class Sentence:
     # but excluding the tokens spanning over them, and created by merging these)
     return iter([t for t in self.token_list if type(t["id"]) == int])
 
+  def __repr__(self):
+    return " ".join([t["form"] for t in self])
+
   def get_subtree(self, token, tree = None):
     # returns the subtree spanned by the given token
-    if tree == None:
+    if tree is None:
       tree = self.tree
     if tree.token == token:
-      return self.tree
+      return tree
     else:
       subtrees = [self.get_subtree(token, stree) for stree in tree.children]
       for stree in subtrees:
-        if stree.token == token:
-          return stree
+        if stree:
+          if stree.token == token:
+            return stree
     return None
 
   def flatten_subtree(self, subtree):
     # returns the list of all elements of the given tree
     if subtree.children == []:
-      return subtree.token
+      return [subtree.token]
     else:
-      return [self.flatten_subtree(c) for c in subtree.children]
+      children = []
+      for c in subtree.children:
+        children.extend(self.flatten_subtree(c))
+      tokenlist = sorted(children + [subtree.token], key = lambda t: t["id"])
+      return tokenlist
 
   def get_non_puncts(self):
     # returns the list of tokens which are not punctuation
