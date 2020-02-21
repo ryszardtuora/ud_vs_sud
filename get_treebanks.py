@@ -25,7 +25,7 @@ print("extracting the UD corpora...")
 tf = tarfile.open("ud-treebanks-v{}.tgz".format(UD_VERSION))
 tf.extractall()
 
-sud_tb = "www.grew.fr/download/sud-treebanks-v2.4_2019_08_13.tgz"
+sud_tb = "http://www.grew.fr/download/sud-treebanks-v2.4_2019_08_13.tgz"
 
 print("downloading the SUD corpora...")
 wget.download(sud_tb)
