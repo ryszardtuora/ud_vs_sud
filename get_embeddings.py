@@ -1,8 +1,10 @@
 import gzip
 import tarfile
+import wget
 
-from os import listdir, path, mkdir
+from os import remove, listdir, path, mkdir
 from shutil import move
+from embeddings_pruner import prune
 
 embeddings_dir = "embeddings"
 try:
@@ -14,7 +16,9 @@ except:
 # This is the way we obtain the list of languages we need embeddings for, it should be improved
 # so that it takes into account the languages we omit from the experiment
 tb_dir = "ud-treebanks-v2.4"
-treebanks = listdir(tb_dir)
+with open("good_treebanks.txt") as f:
+    treebanks = f.read().split("\n")
+
 langs = set([])
 for tb in treebanks:
     files = listdir(path.join(tb_dir, tb))
@@ -42,4 +46,6 @@ for lang in langs:
     emb_final_name = emb_file_name.format(lang).replace(".vec.gz", ".vec")
     with open(emb_final_name, "w", encoding = "utf-8") as f:
         f.write(txt)
+    prune(emb_final_name)
     move(emb_final_name, embeddings_dir)
+    remove(emb_file_name.format(lang))

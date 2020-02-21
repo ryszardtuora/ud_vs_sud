@@ -29,3 +29,9 @@ def main():
 			good_treebanks.append(tb)
 	
 	return good_treebanks
+
+if __name__ == "__main__":
+    good_treebanks = main()
+    with open("good_treebanks.txt", "w", encoding = "utf-8") as f:
+        tb_names = "\n".join(good_treebanks)
+        f.write(tb_names)
