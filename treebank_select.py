@@ -2,8 +2,8 @@ import requests
 import os
 from lxml import etree
 
-rating_threshold = 0.5
-tokens_threshold = 80000
+rating_threshold = 0.4
+tokens_threshold = 75000
 
 tb_folder = "ud-treebanks-v2.4"
 treebanks_list = os.listdir(tb_folder)
@@ -32,6 +32,7 @@ def main():
 
 if __name__ == "__main__":
     good_treebanks = main()
-    with open("good_treebanks.txt", "w", encoding = "utf-8") as f:
-        tb_names = "\n".join(good_treebanks)
+    with open("good_treebanks.py", "w", encoding = "utf-8") as f:
+        tb_names = ",\n".join(good_treebanks)
+        file_txt = "good_treebanks = [{}]".format(tb_names)
         f.write(tb_names)
