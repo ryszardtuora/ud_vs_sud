@@ -32,7 +32,8 @@ def main():
 
 if __name__ == "__main__":
     good_treebanks = main()
+    good_treebanks = ['"{}"'.format(gt) for gt in good_treebanks]
     with open("good_treebanks.py", "w", encoding = "utf-8") as f:
         tb_names = ",\n".join(good_treebanks)
         file_txt = "good_treebanks = [{}]".format(tb_names)
-        f.write(tb_names)
+        f.write(file_txt)

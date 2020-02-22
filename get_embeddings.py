@@ -13,11 +13,11 @@ except:
     pass
 
 
-# This is the way we obtain the list of languages we need embeddings for, it should be improved
-# so that it takes into account the languages we omit from the experiment
+# This is the way we obtain the list of languages we need embeddings for
+from good_treebanks import good_treebanks as treebanks
+
 tb_dir = "ud-treebanks-v2.4"
-with open("good_treebanks.txt") as f:
-    treebanks = f.read().split("\n")
+
 
 langs = set([])
 for tb in treebanks:
