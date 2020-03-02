@@ -40,7 +40,7 @@ for lang in langs:
     print("extracting the {} docs...".format(lang))
     with gzip.open(emb_file_name.format(lang)) as f:
         txt = f.read()
-    # optional vector pruning to save space, let's say to 300.000 least popular words, additionally dimensionality reduction would be of usetxt
+    # optional vector pruning to save space, let's say to 300.000 most popular words, additionally dimensionality reduction would be of use
     txt = str(txt, encoding  = "utf-8") # not sure if this is the right way to proceed, especially for the non-european languages
 
     emb_final_name = emb_file_name.format(lang).replace(".vec.gz", ".vec")

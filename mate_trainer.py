@@ -17,7 +17,7 @@ def train_mate(train_file):
     cmds = []
     for threshold in [0.75, 0.5, 0.4, 0.3, 0.2, 0.1, 0.05, 0.01]:
         out_file = train_file.replace("train.conllu", "mate_{}.model".format(threshold)
-        cmd = ["java", "-classpath anna-3.61.jar is2.parser.Parser", "-model {}".format(out_file), "-train {}".format(train_file), "-decodeTH {}".format(threshold)]
+        cmd = ["java", "-classpath Mate/anna-3.61.jar is2.parser.Parser", "-model {}".format(out_file), "-train {}".format(train_file), "-decodeTH {}".format(threshold)]
         cmds.append((cmd, out_file))
     with multiprocessing.Pool(4) as pool:
         results = pool.map(run_cli, cmds)
