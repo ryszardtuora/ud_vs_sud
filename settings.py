@@ -1,1 +1,1 @@
-UD_VERSION = "2.4"
+UD_VERSION = "2.5"
