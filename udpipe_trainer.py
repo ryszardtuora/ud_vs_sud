@@ -42,13 +42,13 @@ def train_udpipe(train_file):
 def get_train_files():
     t_list = []
     for t in treebanks:
-        t_dir = path.join("ud-treebanks-v2.4", t)
+        t_dir = path.join("ud-treebanks-v2.5", t)
         contents = listdir(t_dir)
         train_file = [f for f in contents if f.endswith("train.conllu")][0]
         file_path = path.join(t_dir, train_file)
         t_list.append(file_path)
         
-        sud_dir = path.join("sud-treebanks-v2.4_2019_08_13", t.replace("UD", "SUD"))
+        sud_dir = path.join("sud-treebanks-v2.5.tgz", t.replace("UD", "SUD"))
         sud_contents = listdir(sud_dir)
         sud_train_file = [f for f in sud_contents if f.endswith("train.conllu")][0]
         sud_file_path = path.join(sud_dir, sud_train_file)
