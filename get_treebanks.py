@@ -2,9 +2,9 @@ import wget
 import tarfile
 from settings import UD_VERSION
 
-url_tb = "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-2988/ud-treebanks-v{}.tgz".format(UD_VERSION)
-url_docs = "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-2988/ud-documentation-v{}.tgz".format(UD_VERSION)
-url_tools = "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-2988/ud-tools-v{}.tgz".format(UD_VERSION)
+url_tb = "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3105/ud-treebanks-v{}.tgz".format(UD_VERSION)
+url_docs = "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3105/ud-documentation-v{}.tgz".format(UD_VERSION)
+url_tools = "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3105/ud-tools-v{}.tgz".format(UD_VERSION)
 
 
 
