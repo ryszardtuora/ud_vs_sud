@@ -48,7 +48,7 @@ def get_train_files():
         file_path = path.join(t_dir, train_file)
         t_list.append(file_path)
         
-        sud_dir = path.join("sud-treebanks-v2.5.tgz", t.replace("UD", "SUD"))
+        sud_dir = path.join("sud-treebanks-v2.5", t.replace("UD", "SUD"))
         sud_contents = listdir(sud_dir)
         sud_train_file = [f for f in sud_contents if f.endswith("train.conllu")][0]
         sud_file_path = path.join(sud_dir, sud_train_file)
