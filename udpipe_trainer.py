@@ -7,6 +7,7 @@ UDPIPE_RUNS = 4
 command_target = path.join("udpipe-1.2.0-bin", "bin-linux64", "udpipe")
 
 from good_treebanks import good_treebanks as treebanks
+from utils import get_train_files
 
 
 "embeddings", "cc.{}.300.vec"
@@ -37,23 +38,6 @@ def train_udpipe(train_file):
     with open(train_file.replace("train.conllu", "udpipe_results.txt"), "w", encoding = "utf-8") as f:
         f.write(txt)
     return results
-
-
-def get_train_files():
-    t_list = []
-    for t in treebanks:
-        t_dir = path.join("ud-treebanks-v2.5", t)
-        contents = listdir(t_dir)
-        train_file = [f for f in contents if f.endswith("train.conllu")][0]
-        file_path = path.join(t_dir, train_file)
-        t_list.append(file_path)
-        
-        sud_dir = path.join("sud-treebanks-v2.5", t.replace("UD", "SUD"))
-        sud_contents = listdir(sud_dir)
-        sud_train_file = [f for f in sud_contents if f.endswith("train.conllu")][0]
-        sud_file_path = path.join(sud_dir, sud_train_file)
-        t_list.append(sud_file_path)
-    return t_list
 
 def train_all():
     for t in get_train_files():
