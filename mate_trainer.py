@@ -18,7 +18,7 @@ def train_mate(train_file):
         out_file = train_file.replace("train.conllu", "mate_{}.model".format(threshold)
         cmd = ["java", "-classpath Mate/anna-3.61.jar is2.parser.Parser", "-model {}".format(out_file), "-train {}".format(train_file), "-decodeTH {} -cores 24".format(threshold)]
         cmds.append((cmd, out_file))
-    map(run_cli, cmds)
+    results = map(run_cli, cmds)
     return results
 		
 def main(train_file):
