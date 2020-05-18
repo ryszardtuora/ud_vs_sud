@@ -15,6 +15,8 @@ def from_conllu_to_09(filename):
     for sent in sent_list:
         sent_chunk = []
         for tok in sent:
+            if type(tok["id"]) == tuple:
+                continue
             feats = "_"
             if tok['feats'] != None:
                 feats = "|".join(["{}={}".format(k,v) for k, v in tok["feats"].items()])
