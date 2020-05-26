@@ -1,3 +1,4 @@
+from os import path, listdir
 from good_treebanks import good_treebanks as treebanks
 
 def remove_punct(filename):
