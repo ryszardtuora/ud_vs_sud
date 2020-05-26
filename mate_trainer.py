@@ -48,7 +48,7 @@ def evaluate_mate(train_file):
         cmd = ["java", "-classpath", "Mate/anna-3.61.jar", "is2.parser.Parser", "-model", model_file, "-test", dev_file, "-out", out_file]
         out = subprocess.run(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
         from_09_to_conllu(out_file)
-        gold = load_conllu_file(dev_file)
+        gold = load_conllu_file(dev_file.replace(".conll09", ".conllu"))
         sys = load_conllu_file(out_file.replace(".conll09", "_conv_back.conllu"))
         score = evaluate(gold, sys)
         scores[train_file]['LAS'].append(score.get('LAS'))
@@ -82,7 +82,7 @@ def final_eval(chosen_models):
         cmd = ["java", "-classpath", "Mate/anna-3.61.jar", "is2.parser.Parser", "-model", model_file, "-test", test_file, "-out", out_file]
         out = subprocess.run(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
         from_09_to_conllu(out_file)
-        gold = load_conllu_file(test_file)
+        gold = load_conllu_file(test_file.replace(".conll09", ".conllu"))
         sys = load_conllu_file(out_file.replace(".conll09", "_conv_back.conllu"))
         score = evaluate(gold, sys)
         scores[model_file]['UAS'] = score.get('UAS')
