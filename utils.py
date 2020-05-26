@@ -1,3 +1,5 @@
+from good_treebanks import good_treebanks as treebanks
+
 def remove_punct(filename):
 	with open(filename, "r", encoding = "utf-8") as f:
 		txt = f.read()
