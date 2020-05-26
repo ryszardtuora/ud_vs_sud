@@ -2,14 +2,14 @@ import wget
 from os import mkdir, rename
 from zipfile import ZipFile
 
-url_mate_anna-3.61 = "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/mate-tools/anna-3.61.jar"
-url_udpipe-1.2.0 = "https://github.com/ufal/udpipe/releases/download/v1.2.0/udpipe-1.2.0-bin.zip"
+url_mate = "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/mate-tools/anna-3.61.jar"
+url_udpipe = "https://github.com/ufal/udpipe/releases/download/v1.2.0/udpipe-1.2.0-bin.zip"
 url_combo = "https://github.com/360er0/COMBO/archive/master.zip"
 
 print("downloading Mate graph-based parser v3.61")
-wget.download(url_mate_anna-3.61)
+wget.download(url_mate)
 print("downloading Udpipe v1.2.0")
-wget.download(url_udpipe-1.2.0)
+wget.download(url_udpipe)
 print("downloading COMBO")
 wget.download(url_combo)
 
