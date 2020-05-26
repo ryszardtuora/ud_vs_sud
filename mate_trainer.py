@@ -7,6 +7,7 @@ import pandas as pd
 from good_treebanks import good_treebanks as treebanks
 from utils import get_train_files
 from conll18_ud_eval import evaluate, load_conllu_file
+from conll09_converter import from_09_to_conllu
 
 nb_cores = int((multiprocessing.cpu_count())/2)
 
