@@ -13,9 +13,6 @@ wget.download(url_udpipe)
 print("downloading COMBO")
 wget.download(url_combo)
 
-print("Moving Mate to a different folder")
-mkdir("Mate")
-rename("anna-3.61.jar", "Mate/anna-3.61.jar")
 print("Extracting Udpipe v.1.2.0")
 with ZipFile("udpipe-1.2.0-bin.zip") as zipObj1:
     zipObj1.extractall()

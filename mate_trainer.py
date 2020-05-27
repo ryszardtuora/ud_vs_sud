@@ -42,7 +42,7 @@ def evaluate_mate(train_file):
     scores[train_file]['LAS'] = []
     scores[train_file]['UAS'] = []
     for threshold in [0.75, 0.5, 0.4, 0.3, 0.2, 0.1, 0.05, 0.01]:
-        out_file = train_file.replace("train.conll09", "mate_{}.conll09.format(threshold)")
+        out_file = train_file.replace("train.conll09", "mate_{}.conll09".format(threshold))
         dev_file = train_file.replace("train.conll09", "dev.conll09")
         model_file = train_file.replace("train.conll09", "mate_{}.model".format(threshold))
         cmd = ["java", "-classpath", "Mate/anna-3.61.jar", "is2.parser.Parser", "-model", model_file, "-test", dev_file, "-out", out_file]
