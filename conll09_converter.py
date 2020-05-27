@@ -50,7 +50,7 @@ def from_conllu_to_09(filename):
         sentstring = "\n".join(sent_chunk)
         out.append(sentstring)
 
-    outstring = "\n\n".join(out)+"\n"
+    outstring = "\n\n".join(out)+"\n\n"
     with open(filename[:filename.index(".conllu")] + ".conll09", 'w', encoding='utf-8') as f:
      f.write(outstring)
 
@@ -101,7 +101,7 @@ def from_09_to_conllu(filename):
         sent_string = "\n".join(tok_strings)
         sent_strings.append(sent_string)
 
-    out_string = "\n\n".join(sent_strings) + "\n"
+    out_string = "\n\n".join(sent_strings) + "\n\n"
     with open(filename[:filename.index(".conll09")] + '_conv_back.conllu', 'w', encoding='utf-8') as f:
         f.write(out_string)
 
