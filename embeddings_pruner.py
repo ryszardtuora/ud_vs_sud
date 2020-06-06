@@ -1,4 +1,4 @@
-size = 250000
+size = 300000
 remove_old = True # this is the only way atm
 
 def prune(filename):
