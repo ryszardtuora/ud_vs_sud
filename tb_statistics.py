@@ -3,14 +3,16 @@ from sentence import Sentence
 from pandas import DataFrame
 from scipy.stats import entropy
 
-UD_TB_DIR = "ud-treebanks-v2.4"
-SUD_TB_DIR = "sud-treebanks-v2.4_2019_08_13"
+UD_TB_DIR = "ud-treebanks-v2.5"
+SUD_TB_DIR = "sud-treebanks-v2.5"
 
 def train_names(dir_name):
 	names = []
 	tbs = os.listdir(dir_name)
 	for tb in tbs:
 		tb_dir = os.path.join(dir_name, tb)
+		if not os.path.isdir(tb_dir):
+			continue
 		tb_files = os.listdir(tb_dir)
 		try:
 			train_file = [f for f in tb_files if f.endswith("train.conllu")][0]

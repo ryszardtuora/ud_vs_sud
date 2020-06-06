@@ -1,5 +1,5 @@
 from os import path, listdir
-from good_treebanks import good_treebanks as treebanks
+import json
 
 def remove_punct(filename):
 	with open(filename, "r", encoding = "utf-8") as f:
@@ -49,6 +49,8 @@ def remove_punct(filename):
 
 def get_train_files():
     t_list = []
+    with open('good_treebanks.json') as f:
+        treebanks = json.load(f)
     for t in treebanks:
         t_dir = path.join("ud-treebanks-v2.5", t)
         contents = listdir(t_dir)
