@@ -94,6 +94,7 @@ from __future__ import print_function
 
 import argparse
 import io
+import os
 import sys
 import unicodedata
 import unittest
@@ -167,13 +168,22 @@ def load_conllu(file):
             self.columns[FEATS] = "|".join(sorted(feat for feat in columns[FEATS].split("|")
                                                   if feat.split("=", 1)[0] in UNIVERSAL_FEATURES))
             # Let's ignore language-specific deprel subtypes.
-            self.columns[DEPREL] = columns[DEPREL].split(":")[0]
+            clean = columns[DEPREL].split("@")[0]
+            if columns[DEPREL].split(":")[0] == "comp":
+                split = clean.split(":")
+                if len(split) > 1:
+                    if split[1] == "cleft":
+                        self.columns[DEPREL] = split[0]
+                    else:
+                        self.columns[DEPREL] = clean
+            else:
+                self.columns[DEPREL] = clean.split(":")[0]
             # Precompute which deprels are CONTENT_DEPRELS and which FUNCTIONAL_DEPRELS
             self.is_content_deprel = self.columns[DEPREL] in CONTENT_DEPRELS
             self.is_functional_deprel = self.columns[DEPREL] in FUNCTIONAL_DEPRELS
 
     ud = UDRepresentation()
-
+    
     # Load the CoNLL-U file
     index, sentence_start = 0, None
     while True:
@@ -253,6 +263,7 @@ def load_conllu(file):
             for _ in range(start, end + 1):
                 word_line = _decode(file.readline().rstrip("\r\n"))
                 word_columns = word_line.split("\t")
+
                 if len(word_columns) != 10:
                     raise UDError("The CoNLL-U line does not contain 10 tab-separated columns: '{}'".format(_encode(word_line)))
                 ud.words.append(UDWord(ud.tokens[-1], word_columns, is_multiword=True))
