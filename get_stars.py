@@ -1,8 +1,9 @@
 import requests
 import json
 import os
+from settings import UD_VERSION
 
-TREEBANKS_DIR= "ud-treebanks-v2.5"
+TREEBANKS_DIR= "ud-treebanks-v{}".format(UD_VERSION)
 
 
 eval_dic = {}
@@ -13,6 +14,7 @@ for tb_name in tbs:
     continue
   url = "https://raw.githubusercontent.com/UniversalDependencies/{}/master/eval.log".format(tb_name)
   response = requests.get(url)
+  response.encoding = "utf-8"
   content = str(response.text)
   last_line = content.split("\n")[-2]
   evaluation = float(last_line.split("\t")[1])

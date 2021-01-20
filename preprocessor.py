@@ -28,6 +28,7 @@ def preprocess_sent(sent):
     except (TypeError, KeyError):
       # deps are not listed
       pass
+    tok["misc"] = None
 
   return sent
 
@@ -38,7 +39,8 @@ def preprocess_file(filename):
   with open(filename, "r", encoding="utf-8") as f:
     for sent in tqdm(conllu.parse_incr(f)):
       out = preprocess_sent(sent)
-      out_sents.append(out.serialize())
+      if len(out) > 0:
+        out_sents.append(out.serialize())
   
   out_txt = "".join(out_sents)
   with open(filename, "w", encoding="utf-8") as f:

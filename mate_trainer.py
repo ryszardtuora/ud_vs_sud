@@ -5,7 +5,6 @@ import multiprocessing
 import pandas as pd
 
 
-from good_treebanks import good_treebanks as treebanks
 from utils import get_train_files
 from conll18_ud_eval import evaluate, load_conllu_file
 from conll09_converter import from_09_to_conllu
@@ -22,9 +21,9 @@ def run_cli(args):
 def train_mate(train_file):
     cmds = []
     results = []
-    for threshold in [0.75]:
+    for threshold in [0.75, 0.5, 0.4, 0.3, 0.2, 0.15, 0.1]:
         out_file = train_file.replace("train.conll09", "mate_{}.model".format(threshold))			      
-        cmd = ["java", "-classpath", "anna-3.61.jar", "is2.parser.Parser", "-model", out_file, "-train", train_file, "-decodeTH", str(threshold), "-cores", str(nb_cores)]
+        cmd = ["java", "-classpath", "mate-3.62.jar", "is2.parser.Parser", "-model", out_file, "-train", train_file, "-decodeTH", str(threshold), "-cores", str(nb_cores)]
         cmds.append((cmd, out_file))
     for cmd in cmds:
         result = run_cli(cmd)
@@ -42,11 +41,11 @@ def evaluate_mate(train_file):
     scores[train_file] = {}
     scores[train_file]['LAS'] = []
     scores[train_file]['UAS'] = []
-    for threshold in [0.75]:
+    for threshold in [0.75, 0.5, 0.4, 0.3, 0.2, 0.15, 0.1]:
         out_file = train_file.replace("train.conll09", "mate_{}.conll09".format(threshold))
         dev_file = train_file.replace("train.conll09", "dev.conll09")
         model_file = train_file.replace("train.conll09", "mate_{}.model".format(threshold))
-        cmd = ["java", "-classpath", "anna-3.61.jar", "is2.parser.Parser", "-model", model_file, "-test", dev_file, "-out", out_file]
+        cmd = ["java", "-classpath", "mate-3.62.jar", "is2.parser.Parser", "-model", model_file, "-test", dev_file, "-out", out_file]
         out = subprocess.run(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
         from_09_to_conllu(out_file)
         gold = load_conllu_file(dev_file.replace(".conll09", ".conllu"))
@@ -59,7 +58,7 @@ def evaluate_mate(train_file):
 def choose_best(scores):
     reform = {k: pd.DataFrame(v) for k,v in scores.items()}
     df = pd.concat(reform, axis=1)
-    df.index = [0.75]
+    df.index = [0.75, 0.5, 0.4, 0.3, 0.2, 0.15, 0.1]
     df.to_excel('results_mate_optimization.xlsx')
     chosen_models = []
     treebanks = df.columns.levels[0]
@@ -76,6 +75,8 @@ def choose_best(scores):
 def final_eval(chosen_models):
     scores = {}
     scores_sorted = {}
+    scores_sorted["UAS"] = {}
+    scores_sorted["LAS"] = {}
     scores_sorted["UAS"]["UD"] = []
     scores_sorted["UAS"]["SUD"] = []
     scores_sorted["LAS"]["UD"] = []
@@ -85,7 +86,7 @@ def final_eval(chosen_models):
         scores[model_file] = {} 
         test_file = model_file.split("mate")[0] + "test.conll09"
         out_file = model_file.split("mate")[0] + "mate_final.conll09"
-        cmd = ["java", "-classpath", "anna-3.61.jar", "is2.parser.Parser", "-model", model_file, "-test", test_file, "-out", out_file]
+        cmd = ["java", "-classpath", "mate-3.62.jar", "is2.parser.Parser", "-model", model_file, "-test", test_file, "-out", out_file]
         out = subprocess.run(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
         from_09_to_conllu(out_file)
         gold = load_conllu_file(test_file.replace(".conll09", ".conllu"))

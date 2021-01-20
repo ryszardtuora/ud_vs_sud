@@ -2,11 +2,12 @@ import requests
 import os
 import json
 from lxml import etree
+from settings import UD_VERSION
 
 rating_threshold = 0.7
 tokens_threshold = 70000
 
-tb_folder = "ud-treebanks-v2.5"
+tb_folder = "ud-treebanks-v{}".format(UD_VERSION)
 treebanks_list = os.listdir(tb_folder)
 
 

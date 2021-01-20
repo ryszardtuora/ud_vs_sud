@@ -7,7 +7,7 @@ from os import remove, listdir, path, mkdir
 from shutil import move
 from embeddings_pruner import prune
 
-tb_dir = "ud-treebanks-v2.5"
+tb_dir = "ud-treebanks-v2.6"
 
 
 def download_embeddings():

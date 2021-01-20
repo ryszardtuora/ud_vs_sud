@@ -121,7 +121,8 @@ def train_all():
     all_scores = {}
     for t in get_train_files():
         train_udpipe(t)
+        print(t)
         all_scores.update(evaluate_udpipe(t))
     chosen_models = choose_best(all_scores)
     final_eval(chosen_models)
-#train_all()    
+train_all()    

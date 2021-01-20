@@ -3,8 +3,8 @@ from sentence import Sentence
 from pandas import DataFrame
 from scipy.stats import entropy
 
-UD_TB_DIR = "ud-treebanks-v2.5"
-SUD_TB_DIR = "sud-treebanks-v2.5"
+UD_TB_DIR = "ud-treebanks-v2.6"
+SUD_TB_DIR = "sud-treebanks-v2.6"
 
 def train_names(dir_name):
 	names = []

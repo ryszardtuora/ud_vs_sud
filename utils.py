@@ -1,5 +1,6 @@
 from os import path, listdir
 import json
+from settings import UD_VERSION
 
 def remove_punct(filename):
 	with open(filename, "r", encoding = "utf-8") as f:
@@ -47,20 +48,22 @@ def remove_punct(filename):
 		f.write(new_txt)
 
 
-def get_train_files():
+def get_train_files(dev_run=False):
     t_list = []
     with open('good_treebanks.json') as f:
         treebanks = json.load(f)
     for t in treebanks:
-        t_dir = path.join("ud-treebanks-v2.5", t)
+        t_dir = path.join("ud-treebanks-v{}".format(UD_VERSION), t)
         contents = listdir(t_dir)
         train_file = [f for f in contents if f.endswith("train.conllu")][0]
         file_path = path.join(t_dir, train_file)
         t_list.append(file_path)
         
-        sud_dir = path.join("sud-treebanks-v2.5", t.replace("UD", "SUD"))
+        sud_dir = path.join("sud-treebanks-v{}".format(UD_VERSION), t.replace("UD", "SUD"))
         sud_contents = listdir(sud_dir)
         sud_train_file = [f for f in sud_contents if f.endswith("train.conllu")][0]
         sud_file_path = path.join(sud_dir, sud_train_file)
         t_list.append(sud_file_path)
+    if dev_run:
+        return t_list[:2]
     return t_list
