@@ -6,6 +6,7 @@ from settings import UD_VERSION
 
 rating_threshold = 0.7
 tokens_threshold = 70000
+tokens_upper_threshold = 1000000
 
 tb_folder = "ud-treebanks-v{}".format(UD_VERSION)
 treebanks_list = os.listdir(tb_folder)
@@ -30,7 +31,7 @@ def select_treebanks():
     total = size.find("total")
     tokens = int(total.find("tokens").text)
 
-    if rating > rating_threshold and tokens > tokens_threshold:
+    if rating > rating_threshold and tokens > tokens_threshold and tokens < tokens_upper_threshold:
       good_treebanks.append(tb)
 
   with open("good_treebanks.json", "w", encoding = "utf-8") as f:
