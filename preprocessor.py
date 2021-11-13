@@ -1,6 +1,7 @@
 import os
 import conllu
 from tqdm import tqdm
+from constants import DRY_RUN
 
 def preprocess_sent(sent):
   to_remove = []
@@ -11,12 +12,15 @@ def preprocess_sent(sent):
       if tok2["head"] == tok_id:
         is_parent = True
     if (tok["upostag"] == "PUNCT" and not is_parent) or type(tok_id) != int:
+      # eliminating punctuation (if it is a leaf in the tree)
+      # and eliminating subtokens 
       to_remove.append(tok)
 
   for tok in to_remove:
     sent.remove(tok)
 
   old_id_to_new_id = {0:0}
+  # reindexing the tokens
   for i, tok in enumerate(sent):
     old_id_to_new_id[tok["id"]] = i + 1
     tok["id"] = i + 1
@@ -40,7 +44,10 @@ def preprocess_file(filename):
     for sent in tqdm(conllu.parse_incr(f)):
       out = preprocess_sent(sent)
       if len(out) > 0:
+        # filtering out sentences which have 0 tokens after preprocessing
         out_sents.append(out.serialize())
+      if DRY_RUN and len(out_sents) >= 10:
+        break
   
   out_txt = "".join(out_sents)
   with open(filename, "w", encoding="utf-8") as f:
@@ -48,6 +55,7 @@ def preprocess_file(filename):
 
 
 def preprocess_treebanks(treebanks):
+  print("Preprocessing treebanks:")
   for treebank in treebanks:
     print(treebank)
     conllu_files = [f for f in os.listdir(treebank) if f.endswith(".conllu")]

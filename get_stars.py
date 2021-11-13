@@ -1,9 +1,7 @@
 import requests
 import json
 import os
-from settings import UD_VERSION
-
-TREEBANKS_DIR= "ud-treebanks-v{}".format(UD_VERSION)
+from constants import UD_TREEBANKS_DIR 
 
 
 eval_dic = {}

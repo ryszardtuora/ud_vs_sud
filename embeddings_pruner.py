@@ -1,4 +1,5 @@
-size = 300000
+from constants import WORD_VECTORS_N
+
 remove_old = True # this is the only way atm
 
 def prune(filename):
@@ -7,10 +8,10 @@ def prune(filename):
     dim = header.split(" ")[1].strip()
 
     vex = []
-    vex.append(" ".join([str(size), dim]))
+    vex.append(" ".join([str(WORD_VECTORS_N), dim]))
     counter = 0
 
-    while counter < size:
+    while counter < WORD_VECTORS_N:
         line = file.readline()
         line = line.strip()
         vex.append(line)

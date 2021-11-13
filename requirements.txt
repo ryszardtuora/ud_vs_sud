@@ -1,0 +1,11 @@
+pandas
+lxml
+tqdm
+wget==3.2
+conllu==2.2.1
+spaCy==2.2
+scipy==1.2.1
+fasttext==0.9.1
+cython
+uuparser
+
