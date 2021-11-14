@@ -16,5 +16,3 @@ Then run this to start the experiment:
 
 TODO:
 make training less verbose?
-try dry running with a bigger number of sentences
-incorporate more aggressive pruning for dry runs (loading the embeddings takes a lions share of training right now)

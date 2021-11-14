@@ -4,40 +4,13 @@ import json
 from tqdm import tqdm
 from scipy.stats import entropy
 from pandas import DataFrame
-
-
-UD_TB_DIR = "ud-treebanks-v2.6"
-SUD_TB_DIR = "sud-treebanks-v2.6"
-
-with open("good_treebanks.json") as f:
-  good_treebanks = json.load(f)
-
-def train_names(dir_name):
-	names = []
-	tbs = os.listdir(dir_name)
-	for tb in tbs:
-		if tb.replace("SUD_", "UD_") not in good_treebanks:
-			continue
-		tb_dir = os.path.join(dir_name, tb)
-		if not os.path.isdir(tb_dir):
-			continue
-		tb_files = os.listdir(tb_dir)
-		try:
-			train_file = [f for f in tb_files if f.endswith("train.conllu")][0]
-			names.append(os.path.join(tb_dir, train_file))
-		except IndexError:
-			# there is no train file (as in parallel UD corpora)
-			pass
-		
-	return names
+from utils import get_train_files
 
 
 def tbs_match(a,b):
 	a = os.path.basename(a)
 	b = os.path.basename(b)
 	return a[:5] == b[:5]
-
-
 
 def clean_deprel(deprel):
   clean = deprel.split("@")[0]
@@ -53,7 +26,6 @@ def clean_deprel(deprel):
   else:
     deprel = clean.split(":")[0]
   return deprel
-
 
 def get_tb_sents(tb_path):
   files = os.listdir(tb_path)
@@ -86,7 +58,6 @@ def calculate_dep_lens(sents):
   adl = sum(tdl)/sum(sl)
   return adl
       
-
 def calculate_tok_depths(sents):
   ttd = []
   sl = []
@@ -110,7 +81,6 @@ def calculate_tok_depths(sents):
     sl.append(len(sent)-1) # counting the number of genuine dependency arcs
   atd = sum(ttd)/sum(sl)
   return atd
-
 
 def calculate_arc_direction_entropy(sents):
   dict = {}
@@ -154,7 +124,6 @@ def calculate_label_entropy(sents):
   label_entropy = entropy(vals)
   return label_entropy
   
-
 def tree_stats(uds, suds):
   table = {"name" : [], "UD_ADL": [], "SUD_ADL": [], "UD_ATD":[], "SUD_ATD":[], "UD_ADE" : [], "SUD_ADE" : [], "UD_LE" : [], "SUD_LE" : []}				
   for u, s in zip(uds, suds):
@@ -185,9 +154,11 @@ def tree_stats(uds, suds):
 
   return table
 
-uds = sorted(train_names(UD_TB_DIR))
-suds = sorted(train_names(SUD_TB_DIR))
-assert all([tbs_match(s,u) for s,u in zip(suds,uds)]) # verifying whether the corpora are matched properly
-tb = tree_stats(uds, suds)
-df = DataFrame(tb)
-df.to_csv("tb_stats.csv")
+def calculate_treebank_stats():
+    train_files = get_train_files()
+    uds = sorted([t for t in train_files if t.startswith("ud")])
+    suds = sorted([t for t in train_files if t.startswith("sud")])
+    assert all([tbs_match(s,u) for s,u in zip(suds,uds)]) # verifying whether the corpora are matched properly
+    tb = tree_stats(uds, suds)
+    df = DataFrame(tb)
+    df.to_csv("tb_stats.csv")
