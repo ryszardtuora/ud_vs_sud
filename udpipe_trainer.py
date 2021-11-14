@@ -5,15 +5,16 @@ import multiprocessing
 import pandas as pd
 
 
-UDPIPE_RUNS = 7
-command_target = path.join("udpipe-1.2.0-bin", "bin-linux64", "udpipe")
-nb_of_processes = 21
-
+from tqdm import tqdm
 from utils import get_train_files
 from conll18_ud_eval import evaluate, load_conllu_file
 
 
-"embeddings", "cc.{}.300.vec"
+UDPIPE_RUNS = 7
+command_target = path.join("udpipe-1.2.0-bin", "bin-linux64", "udpipe")
+nb_of_processes = 21
+
+
 
 def activate_udpipe():  
     os.system("chmod u+x udpipe-1.2.0-bin/bin-linux64/udpipe")
@@ -116,13 +117,14 @@ def final_eval(chosen_models):
     results_sorted.index = name
     results_sorted.to_csv('results_udpipe_final_sorted.csv')
 
-def train_all():
+def train_eval_all_udpipe():
     activate_udpipe()
     all_scores = {}
-    for t in get_train_files():
+    for t in tqdm(get_train_files()):
         train_udpipe(t)
         print(t)
         all_scores.update(evaluate_udpipe(t))
     chosen_models = choose_best(all_scores)
     final_eval(chosen_models)
-train_all()    
+    
+    

@@ -5,7 +5,7 @@ import csv
 from lxml import etree
 from constants import UD_TREEBANKS_DIR, RATING_THRESHOLD, TOKENS_UPPER_THRESHOLD, TOKENS_LOWER_THRESHOLD
 
-treebanks_list = os.listdir(UD_TREEBANKS_DIR)
+treebanks_list = sorted(os.listdir(UD_TREEBANKS_DIR))
 
 def select_treebanks():
   good_treebanks = []

@@ -1,7 +1,7 @@
 import os
 import conllu
 from tqdm import tqdm
-from constants import DRY_RUN
+from constants import DRY_RUN, DRY_SENT_NUM
 
 def preprocess_sent(sent):
   to_remove = []
@@ -46,7 +46,7 @@ def preprocess_file(filename):
       if len(out) > 0:
         # filtering out sentences which have 0 tokens after preprocessing
         out_sents.append(out.serialize())
-      if DRY_RUN and len(out_sents) >= 10:
+      if DRY_RUN and len(out_sents) >= DRY_SENT_NUM:
         break
   
   out_txt = "".join(out_sents)

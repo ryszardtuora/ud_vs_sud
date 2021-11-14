@@ -1,6 +1,10 @@
-from constants import WORD_VECTORS_N
+from constants import WORD_VECTORS_N, DRY_RUN
 
 remove_old = True # this is the only way atm
+if DRY_RUN:
+    vectors_to_leave = 5000
+else:
+    vectors_to_leave = WORD_VECTORS_N
 
 def prune(filename):
     file = open(filename, "r", encoding = "utf-8")
@@ -8,10 +12,10 @@ def prune(filename):
     dim = header.split(" ")[1].strip()
 
     vex = []
-    vex.append(" ".join([str(WORD_VECTORS_N), dim]))
+    vex.append(" ".join([str(vectors_to_leave), dim]))
     counter = 0
 
-    while counter < WORD_VECTORS_N:
+    while counter < vectors_to_leave:
         line = file.readline()
         line = line.strip()
         vex.append(line)

@@ -1,1 +1,23 @@
-["UD_Russian-GSD", "UD_Swedish-LinES", "UD_German-GSD", "UD_Polish-PDB", "UD_Latvian-LVTB", "UD_Bulgarian-BTB", "UD_Serbian-SET", "UD_Croatian-SET", "UD_Spanish-AnCora", "UD_Romanian-Nonstandard", "UD_Lithuanian-ALKSNIS", "UD_Swedish-Talbanken", "UD_Estonian-EDT", "UD_Slovak-SNK", "UD_Latin-LLCT", "UD_Slovenian-SSJ", "UD_Italian-VIT", "UD_Italian-ISDT", "UD_English-GUM", "UD_Polish-LFG", "UD_Czech-FicTree"]
+[
+  "UD_Bulgarian-BTB",
+  "UD_Croatian-SET",
+  "UD_Czech-FicTree",
+  "UD_English-GUM",
+  "UD_Estonian-EDT",
+  "UD_German-GSD",
+  "UD_Italian-ISDT",
+  "UD_Italian-VIT",
+  "UD_Latin-LLCT",
+  "UD_Latvian-LVTB",
+  "UD_Lithuanian-ALKSNIS",
+  "UD_Polish-LFG",
+  "UD_Polish-PDB",
+  "UD_Romanian-Nonstandard",
+  "UD_Russian-GSD",
+  "UD_Serbian-SET",
+  "UD_Slovak-SNK",
+  "UD_Slovenian-SSJ",
+  "UD_Spanish-AnCora",
+  "UD_Swedish-LinES",
+  "UD_Swedish-Talbanken"
+]

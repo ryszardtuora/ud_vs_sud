@@ -4,7 +4,7 @@ import subprocess
 import multiprocessing
 import pandas as pd
 
-
+from tqdm import tqdm
 from utils import get_train_files
 from conll18_ud_eval import evaluate, load_conllu_file
 from conll09_converter import from_09_to_conllu
@@ -107,12 +107,12 @@ def final_eval(chosen_models):
     results_sorted.index = name
     results_sorted.to_csv('results_mate_final_sorted.csv')
 
-def train_all():
+def train_all_mate():
     all_scores = {}
-    for t in get_train_files():
+    print("Training MATE")
+    for t in tqdm(get_train_files()):
         t = t.replace("conllu", "conll09")
         train_mate(t)
         all_scores.update(evaluate_mate(t))
     chosen_models = choose_best(all_scores)
     final_eval(chosen_models)
-train_all()    
