@@ -294,7 +294,7 @@ def load_conllu(file):
 # Evaluate the gold and system treebanks (loaded using load_conllu).
 def evaluate(gold_ud, system_ud):
     class Score:
-        def __init__(self, gold_total, system_total, correct, aligned_total=None):
+        def __init__(self, gold_total, system_total, correct, aligned_total=None, error_list=None):
             self.correct = correct
             self.gold_total = gold_total
             self.system_total = system_total
@@ -303,6 +303,7 @@ def evaluate(gold_ud, system_ud):
             self.recall = correct / gold_total if gold_total else 0.0
             self.f1 = 2 * correct / (system_total + gold_total) if system_total + gold_total else 0.0
             self.aligned_accuracy = correct / aligned_total if aligned_total else aligned_total
+            self.error_list = error_list
     class AlignmentWord:
         def __init__(self, gold_word, system_word):
             self.gold_word = gold_word
@@ -350,12 +351,16 @@ def evaluate(gold_ud, system_ud):
         def gold_aligned_system(word):
             return alignment.matched_words_map.get(word, "NotAligned") if word is not None else None
         correct = 0
+        error_list = []
         for words in alignment.matched_words:
             if filter_fn is None or filter_fn(words.gold_word):
                 if key_fn(words.gold_word, gold_aligned_gold) == key_fn(words.system_word, gold_aligned_system):
                     correct += 1
+                    error_list.append(1)
+                else:
+                    error_list.append(0)
 
-        return Score(gold, system, correct, aligned)
+        return Score(gold, system, correct, aligned, error_list=error_list)
 
     def beyond_end(words, i, multiword_span_end):
         if i >= len(words):

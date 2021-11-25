@@ -8,12 +8,11 @@ import pandas as pd
 from tqdm import tqdm
 from utils import get_train_files
 from conll18_ud_eval import evaluate, load_conllu_file
-
+from mcnemar import evaluate_wrapper #Mcnemar
 
 UDPIPE_RUNS = 7
 command_target = path.join("udpipe-1.2.0-bin", "bin-linux64", "udpipe")
 nb_of_processes = 21
-
 
 
 def activate_udpipe():  
@@ -21,7 +20,7 @@ def activate_udpipe():
 
 def run_cli(args):
     cmd, outname = args
-    print("executing {}".format(cmd))
+    #print("executing {}".format(cmd))
     out = subprocess.run(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
     return (outname, str(out.stdout, encoding = "utf-8"))
 
@@ -84,17 +83,21 @@ def choose_best(scores):
     return chosen_models
         
 def final_eval(chosen_models):
-    scores = {}
+    #scores = {}
     scores_sorted = {}
     scores_sorted["UAS"] = {}
     scores_sorted["LAS"] = {}
     scores_sorted["UAS"]["UD"] = []
     scores_sorted["UAS"]["SUD"] = []
+    scores_sorted["UAS"]["statistic"] = [] # Mcnemar
+    scores_sorted["UAS"]["p-value"] = [] # Mcnemar
     scores_sorted["LAS"]["UD"] = []
     scores_sorted["LAS"]["SUD"] = []
+    scores_sorted["LAS"]["statistic"] = [] # Mcnemar
+    scores_sorted["LAS"]["p-value"] = [] # Mcnemar
     name = []
-    for model_file in chosen_models:
-        scores[model_file] = {} 
+    for i, model_file in enumerate(chosen_models):
+        #scores[model_file] = {} 
         test_file = model_file.split("udpipe")[0] + "test.conllu"
         out_file = model_file.split("udpipe")[0] + "udpipe_final.conllu"
         cmd = [command_target, "--parse", "--outfile={}".format(out_file), model_file, test_file]
@@ -102,29 +105,41 @@ def final_eval(chosen_models):
         gold = load_conllu_file(test_file)
         sys = load_conllu_file(out_file)
         score = evaluate(gold, sys)
-        scores[model_file]['UAS'] = score.get('UAS').f1
-        scores[model_file]['LAS'] = score.get('LAS').f1
+        #scores[model_file]['UAS'] = score.get('UAS').f1
+        #scores[model_file]['LAS'] = score.get('LAS').f1
         if "sud" in model_file:
             scores_sorted["UAS"]["SUD"].append(score.get('UAS').f1)
             scores_sorted["LAS"]["SUD"].append(score.get('LAS').f1)
+            s_sud = score # Mcnemar
         else:
             scores_sorted["UAS"]["UD"].append(score.get('UAS').f1)
             scores_sorted["LAS"]["UD"].append(score.get('LAS').f1)
+            s_ud = score # Mcnemar
             name.append(os.path.basename(model_file).split("-")[0])
-    results = pd.DataFrame.from_dict({i: scores[i] for i in scores.keys()}, orient='index')
-    results.to_csv('results_udpipe_final.csv')
+            
+#Mcnemar
+        if i % 2 != 0:
+    	    mcnemar_results = evaluate_wrapper(s_ud, s_sud)        
+    	    scores_sorted["UAS"]["statistic"].append(mcnemar_results["UAS"][0])
+    	    scores_sorted["UAS"]["p-value"].append(mcnemar_results["UAS"][1])
+    	    scores_sorted["LAS"]["statistic"].append(mcnemar_results["LAS"][0])
+    	    scores_sorted["LAS"]["p-value"].append(mcnemar_results["LAS"][1])
+    	    
+    #results = pd.DataFrame.from_dict({i: scores[i] for i in scores.keys()}, orient='index')
+    #results.to_csv('results_udpipe_final.csv')
     results_sorted = pd.DataFrame.from_dict({(i, j): scores_sorted[i][j] for i in scores_sorted.keys() for j in scores_sorted[i].keys()})
     results_sorted.index = name
     results_sorted.to_csv('results_udpipe_final_sorted.csv')
 
-def train_eval_all_udpipe():
+def train_all_udpipe():
+    print("Training UDPipe:")
     activate_udpipe()
     all_scores = {}
     for t in tqdm(get_train_files()):
         train_udpipe(t)
-        print(t)
         all_scores.update(evaluate_udpipe(t))
     chosen_models = choose_best(all_scores)
     final_eval(chosen_models)
     
-    
+#if __name__ == "__main__":
+#    train_all_mate()
