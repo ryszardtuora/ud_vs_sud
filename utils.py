@@ -2,7 +2,7 @@ from os import path, listdir
 import json
 from constants import UD_TREEBANKS_DIR, SUD_TREEBANKS_DIR
 
-def get_train_files(dev_run=False):
+def get_train_files(dev_run=True):
     t_list = []
     with open('good_treebanks.json') as f:
         treebanks = json.load(f)

@@ -23,10 +23,6 @@ def from_conllu_to_09(filename):
 
             upos = tok["upostag"]
             tag = tok["upostag"]
-            if 'xpostag' in tok:
-                if tok['xpostag'] != None:
-                    tag = tok['xpostag'].split(":")[0]
-
                     
             token_columns = [str(tok['id']), #1 ID
                      tok['form'], #2 FORM

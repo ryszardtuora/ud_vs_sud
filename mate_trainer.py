@@ -12,11 +12,6 @@ from mcnemar import evaluate_wrapper # Mcnemar
 
 nb_cores = int((multiprocessing.cpu_count())/2)
 
-def run_cli(args):
-    cmd, outname = args
-    #print("executing {}".format(cmd))
-    out = subprocess.run(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
-    return (outname, str(out.stdout, encoding = "utf-8"))
 
 def train_mate(train_file):
     cmds = []
@@ -24,15 +19,8 @@ def train_mate(train_file):
     for threshold in [0.75, 0.5, 0.4, 0.3, 0.2, 0.15, 0.1]:
         out_file = train_file.replace("train.conll09", "mate_{}.model".format(threshold))			      
         cmd = ["java", "-classpath", "mate-3.62.jar", "is2.parser.Parser", "-model", out_file, "-train", train_file, "-decodeTH", str(threshold), "-cores", str(nb_cores)]
-        cmds.append((cmd, out_file))
-    for cmd in cmds:
-        result = run_cli(cmd)
-        results.append(result)
-    joined_results = ["\n".join(t) for t in results]
-    txt = "\n\n".join(joined_results)
-    with open(train_file.replace("train.conllu", "mate_results.txt"), "w", encoding = "utf-8") as f:
-        f.write(txt)
-    return results
+        out = subprocess.run(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
+        print(out)
 
 def evaluate_mate(train_file):
     scores = {}

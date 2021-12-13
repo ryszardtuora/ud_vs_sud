@@ -18,7 +18,7 @@ def main():
   sud_treebanks = ["S" + tb for tb in ud_treebanks]
   preprocess_treebanks([os.path.join(UD_TREEBANKS_DIR, tb) for tb in ud_treebanks])
   preprocess_treebanks([os.path.join(SUD_TREEBANKS_DIR, tb) for tb in sud_treebanks])
-  #download_embeddings()
+  download_embeddings()
   download_parsers()
   calculate_treebank_stats() 
   ### Training models
