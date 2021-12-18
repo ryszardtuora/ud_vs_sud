@@ -1,12 +1,14 @@
-# ud_vs_sud
-Comparing the learnability of two approaches to headedness for dependency grammars
+# UD vs SUD
+This repository provides the code to the experimentes published in the following paper:
 
-This repository will be updated soon (mid November 2021).
+>Tuora, R., Przepiórkowski, A., & Leczkowski, A. (2021, November). Comparing learnability of two dependency schemes:‘semantic’(UD) and ‘syntactic’(SUD). In Findings of the Association for Computational Linguistics: EMNLP 2021 (pp. 2987-2996).
+
 
 To run the experiment first install the dependencies:
 ```
 python3 -m pip install -r requirements.txt
 python3 -m pip install --no-deps --index-url https://pypi.clarin-pl.eu/simple combo==1.0.1
+
 ```
 
 You can choose a dry run, if you want to make sure, that no errors will occur outside of the long phases of the experiment (training). To do so, set `DRY_RUN` in *constants.py* to True.
@@ -14,5 +16,4 @@ You can choose a dry run, if you want to make sure, that no errors will occur ou
 Then run this to start the experiment:
 `python3 main.py`
 
-TODO:
-make training less verbose?
+
