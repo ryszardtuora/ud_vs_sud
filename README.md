@@ -16,4 +16,27 @@ You can choose a dry run, if you want to make sure, that no errors will occur ou
 Then run this to start the experiment:
 `python3 main.py`
 
+The process consists of the following steps:
+1. Downloads UD and SUD treebanks
+2. Selects treebanks which match the quality and size criteria
+3. Preproccesses treebanks
+4. Downloads embeddings for the selected treebanks (languages)
+5. Downloads parsers
+6. Calculates treebank statistics
+7. Convertes `.conllu` files to `.conll09` files (for Mate parser)
+8. Trains and evaluates Mate parser
+9. Trains and evaluates UDPipe parser
+10. Trains and evaluates COMBO parser
+11. Trains and evaluates UUParser
 
+If you wish to skip one or more of those steps, simply comment out a respective line in the `main.py` file.
+
+
+The proccess produces `.csv` files with results:
+1. `tb_stats.csv`
+2. `results_mate_final_sorted.csv`
+3. `results_udpipe_final_sorted.csv`
+4. `results_combo_final_sorted.csv`
+5. `results_mate_final_sorted.csv`
+6. `results_uuparser_transition_final_sorted.csv`
+7. `results_uuparser--graph-base_final_sorted.csv`
